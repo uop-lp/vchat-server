@@ -32,78 +32,52 @@ server.post('/api/chats', function (req, res, next) {
 		]
            
 	};
-  chat.vchatid = next_chat_id++;
-  chats[chat.vchatid] = chat;
-  //add participant which created the chat to it
-  var participant = req.params;
-  participant.participantid = next_part_id++;
-  participants[participant.id] = participant;
-  chat.vchatid.participants = participants;
-  //response
-  res.writeHead(200, {'result': true, 'id': chat.id, 'uri': '/api/chats/'});
-  res.end(JSON.stringify(chat));
-  return next();
+	var participant = {'participantid': ''};
+	//add participant which created the chat to it
+	participant.participantid = next_part_id++;
+	participants[participant.participantid] = participant;
+	//create chat
+	chat.vchatid = next_chat_id++;
+	chat.participants = participants;
+	chats[chat.vchatid] = chat;
+	//response
+	res.writeHead(200, {'result': true, 'id': chat.vchatid, 'uri': '/api/chats/'+ chat.vchatid});
+	res.end(JSON.stringify(chat));
+	return next();
 });
 
 //join chat method
-server.post('/api/chats/vchatid/participants', function (req, res, next) {
-  var participant = req.params;
-  participant.participantid = next_part_id++;
-  participants[participant.participantid] = participant;
-  res.writeHead(200, {'result': true, 'id': participant.participantid, 'uri': '/api/chats/vchatid/participants'});
-  res.end(JSON.stringify(participant));
-  return next();
+server.post('/api/chats/:vchatid/participants', function (req, res, next) {
+	var vchatid = parseInt(req.params.vchatid);
+	//add participant which created the chat to it
+	var participant = {'participantid': ''};
+	participant.participantid = next_part_id++;
+	participants[participant.participantid] = participant;
+	chats[vchatid].participants = participants;
+	res.writeHead(200, {'result': true, 'id': participant.participantid, 'uri': '/api/chats/'+vchatid+'/participants'});
+	res.end(JSON.stringify(participant));
+	return next();
 });
 
 //status method
-server.get('/api/chats/vchatid', function (req, res, next) {
-  res.writeHead(200, {'result': true, 'id': 'vchatid', 'uri': '/api/chats/vchatid'});
-  res.end();
-  return next();
+server.get('/api/chats/:vchatid', function (req, res, next) {
+	var vchatid = parseInt(req.params.vchatid);
+	res.writeHead(200, {'result': true, 'id': 'vchatid', 'uri': '/api/chats/' + vchatid});
+	res.end(JSON.stringify(true));
+	return next();
 });
 
 //list participants method
-server.get('/api/chats/vchatid/participants', function (req, res, next) {
-  res.writeHead(200, {'participants': participants});
-  res.end(JSON.stringify(participants));
-  return next();
+server.get('/api/chats/:vchatid/participants', function (req, res, next) {
+	res.writeHead(200, {'participants': participants});
+	res.end(JSON.stringify(participants));
+	return next();
 });
 
 //end chat method
-server.post('/api/chats/vchatid/end', function (req, res, next) {
-  res.writeHead(200, {'result': true, 'id': 'vchatid', 'uri': '/api/chats/vchatid/end'});
-  res.end();
-  return next();
-});
-
-
-// Client
-var client = restify.createJsonClient({
-  url: 'http://localhost:3000',
-  version: '~0.0'
-});
-
-client.post('/api/chats', { participantid: '0' }, function (err, req, res, obj) {
-  if(err) console.log("An error ocurred:", err);
-  else console.log('POST    /api/chats   returned: %j', obj);
-  
-  client.post('/api/chats/vchatid/participants',{ participantid: '0' }, function (err, req, res, obj) {
-    if(err) console.log("An error ocurred:", err);
-    else console.log('POST     /user/0 returned: %j', obj);
-    
-    client.get('/api/chats/vchatid', function (err, req, res, obj) {
-      if(err) console.log("An error ocurred:", err);
-      else console.log('GET     /api/chats/vchatid/participants returned: %j', obj);
-      
-      client.get('/api/chats/vchatid/participants', function (err, req, res, obj) {
-        if(err) console.log("An error ocurred:", err);
-        else console.log('GET  /api/chats/vchatid/participants returned: %j', obj);
-        
-        client.post('/api/chats/vchatid/end', function (err, req, res, obj) {
-          if(err) console.log("An error ocurred:", err);
-          else console.log('POST     /api/chats/vchatid/end returned: %j', obj);
-        });
-      });
-    });
-  });
+server.post('/api/chats/:vchatid/end', function (req, res, next) {
+	var vchatid = parseInt(req.params.vchatid);
+	res.writeHead(200, {'result': true, 'id': 'vchatid', 'uri': '/api/chats/'+ vchatid +'/end'});
+	res.end(JSON.stringify(true));
+	return next();
 });
