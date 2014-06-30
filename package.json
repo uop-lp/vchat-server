@@ -1,0 +1,21 @@
+{
+  "name": "vchat-server",
+  "version": "0.0.1",
+  "description": "LivePerson Video Chat Server",
+  "main": "lib/main.js",
+  "dependencies": {
+    "winston": "^0.7.3",
+    "assert-plus": "^0.1.5",
+    "restify": "^2.8.1",
+    "pkginfo": "^0.3.0",
+    "findit": "^1.2.0"
+  },
+  "devDependencies": {
+    "nodeunit": "0.8.0"
+  },
+  "scripts": {
+    "start": "node .",
+    "test": "nodeunit test"
+  },
+  "author": "Asaf Haddad"
+}
