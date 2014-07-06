@@ -8,7 +8,10 @@
     "assert-plus": "^0.1.5",
     "restify": "^2.8.1",
     "pkginfo": "^0.3.0",
-    "findit": "^1.2.0"
+    "findit": "^1.2.0",
+    "couchbase": "^1.2.4",
+    "ottoman": "git+https://github.com/couchbaselabs/node-ottoman.git",
+    "q": "^1.0.1"
   },
   "devDependencies": {
     "nodeunit": "0.8.0"
