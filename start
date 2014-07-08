@@ -1,0 +1,11 @@
+start server
+
+Skeleton code (Attempt 1)
+mkdir my-api
+cd my-api
+npm  install restify save
+var restify =require ('restify')
+userSave = require ( 'save') ('user')
+var server = restify.createServer({name: 'my-api'}
+server.listen(3000, function() {
+console.log ('% listening at% s', server.name, server.url)
